@@ -1,0 +1,17 @@
+<form class="login card w-100">
+  <div class="card-header d-flex align-items-center">
+    Please log in or
+    <button class="btn btn-link p-0 ms-1" ng-click="$ctrl.onSignupClick()">sign up</button>
+  </div>
+  <div class="card-body">
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Login</label>
+      <input type="text" class="form-control" ng-model="$ctrl.values.login">
+    </div>
+    <div class="mb-3">
+      <label for="exampleInputPassword1" class="form-label">Password</label>
+      <input type="password" class="form-control" ng-model="$ctrl.values.password">
+    </div>
+    <button type="submit" class="btn btn-primary" ng-disabled="!$ctrl.isValid">Submit</button>
+  </div>
+</form>
