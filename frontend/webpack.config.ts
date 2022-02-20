@@ -77,7 +77,8 @@ const webpackConfig = (env: any): Configuration => {
   };
   if (env && env.dev) {
     config.devServer = devServer;
-    config.plugins.push(new webpack.HotModuleReplacementPlugin());
+    (config.devtool = 'inline-source-map'),
+      config.plugins.push(new webpack.HotModuleReplacementPlugin());
   }
 
   if (env && env.production) {

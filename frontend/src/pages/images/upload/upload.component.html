@@ -1,1 +1,8 @@
 <div>Upload Component</div>
+
+<input type="file" files-input ng-model="$ctrl.fileList" ng-change="$ctrl.onFileChange()" multiple />
+
+
+<div ng-if="$ctrl.filesWithParams.length">
+  <div ng-repeat="fileParams in $ctrl.filesWithParams" ng-thumb="fileParams"></div>
+</div>
