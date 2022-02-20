@@ -1,9 +1,9 @@
-import * as HtmlWebpackPlugin from "html-webpack-plugin";
-import * as path from "path";
-import * as webpack from "webpack";
+import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import * as path from 'path';
+import * as webpack from 'webpack';
 
-import type { Configuration as DevServerConfiguration } from "webpack-dev-server";
-import type { Configuration } from "webpack";
+import type { Configuration as DevServerConfiguration } from 'webpack-dev-server';
+import type { Configuration } from 'webpack';
 
 const devServer: DevServerConfiguration = {
   hot: true,
@@ -14,20 +14,20 @@ const devServer: DevServerConfiguration = {
       warnings: false,
     },
   },
-  host: "localhost",
+  host: 'localhost',
   port: 5000,
 };
 
 const webpackConfig = (env: any): Configuration => {
   const config: Configuration = {
-    mode: "production",
+    mode: 'production',
     entry: {
-      app: path.resolve("./src/core/bootstrap.js"),
+      app: path.resolve('./src/core/bootstrap.ts'),
     },
     output: {
-      filename: "bundle.js",
-      chunkFilename: "[name].chunk.js",
-      path: path.join(__dirname, "dist"),
+      filename: 'bundle.js',
+      chunkFilename: '[name].chunk.js',
+      path: path.join(__dirname, 'dist'),
       clean: true,
     },
     module: {
@@ -35,15 +35,15 @@ const webpackConfig = (env: any): Configuration => {
         // typescript
         {
           test: /\.ts$/,
-          use: "ts-loader",
+          use: 'ts-loader',
           exclude: /node_modules/,
         },
 
         // html
         {
           test: /\.html$/,
-          loader: "raw-loader",
-          exclude: path.resolve("./src/index.html"),
+          loader: 'raw-loader',
+          exclude: path.resolve('./src/index.html'),
         },
 
         // css
@@ -51,27 +51,27 @@ const webpackConfig = (env: any): Configuration => {
           test: /\.css$/,
           use: [
             {
-              loader: "style-loader",
+              loader: 'style-loader',
             },
             {
-              loader: "css-loader",
+              loader: 'css-loader',
             },
           ],
         },
       ],
     },
     resolve: {
-      extensions: [".ts", ".js"],
+      extensions: ['.ts', '.js'],
     },
     plugins: [
       new HtmlWebpackPlugin({
-        filename: "index.html",
-        template: path.resolve("./src/index.html"),
+        filename: 'index.html',
+        template: path.resolve('./src/index.html'),
       }),
 
       new webpack.optimize.SplitChunksPlugin({
-        name: "common",
-        filename: "common.js",
+        name: 'common',
+        filename: 'common.js',
       }),
     ],
   };
@@ -81,11 +81,11 @@ const webpackConfig = (env: any): Configuration => {
   }
 
   if (env && env.production) {
-    config.devtool = "source-map";
+    config.devtool = 'source-map';
     config.plugins.push(
       new webpack.DefinePlugin({
-        "process.env.NODE_ENV": JSON.stringify("production"),
-      })
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
     );
   }
 
