@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DatabaseFileEntity } from 'src/user-images/database-file.entyty';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 export class UserEntity {
@@ -10,4 +18,7 @@ export class UserEntity {
 
   @Column()
   public password: string;
+
+  @OneToMany(() => DatabaseFileEntity, (file) => file.user)
+  files: DatabaseFileEntity[];
 }

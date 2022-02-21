@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 services:
   terramind-backend:
     user: node
@@ -28,28 +28,12 @@ services:
     volumes:
       - pgdata-terramind:/var/lib/postgresql/data
 
-  pgadmin:
-    depends_on:
-      - terramind-postgres
-    links:
-      - terramind-postgres:terramind-postgres
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    ports:
-      - "8085:80"
-    volumes:
-      - /data/pgadmin:/root/.pgadmin
-    env_file:
-      - ./backend/docker.env
-    networks:
-      - postgres
-
   terramind-frontend:
     depends_on:
       - terramind-backend
     build: ./frontend
     ports:
-      - "5000:5000"
+      - '5000:5000'
     container_name: terramin-frontend
 
 networks:

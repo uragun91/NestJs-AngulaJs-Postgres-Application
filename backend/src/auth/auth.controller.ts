@@ -22,9 +22,12 @@ import { SignupPostDto } from './signup-post.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
+  @UseGuards(JwtAuthenticationGuard)
   @Get()
-  async test() {
-    return 'aaaa';
+  authenticate(@Req() request: RequestWithUser) {
+    const user = request.user;
+    user.password = undefined;
+    return user;
   }
 
   @HttpCode(200)
@@ -46,13 +49,12 @@ export class AuthController {
   }
 
   @Post('signup')
-  async signup(@Body() payload: SignupPostDto): Promise<UserEntity> {
-    console.log(payload);
+  async signup(@Body() payload: SignupPostDto): Promise<void> {
     if (payload) {
     } else {
       throw new HttpException('No signup data', HttpStatus.BAD_REQUEST);
     }
 
-    return await this.authService.signup(payload);
+    await this.authService.signup(payload);
   }
 }

@@ -1,6 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignupPostDto } from 'src/auth/signup-post.dto';
+import { DatabaseFileEntity } from 'src/user-images/database-file.entyty';
+import { DatabaseFilesService } from 'src/user-images/databse-file.service';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
 
@@ -9,14 +11,23 @@ export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+    private readonly databaseFilesService: DatabaseFilesService,
   ) {}
 
-  getCurrentUser() {
-    const user = this.userRepository.findOne();
-    if (user) {
-      return user;
-    }
-    throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+  async addUserFile(
+    user: UserEntity,
+    fileBuffer: Buffer,
+    filename: string,
+  ): Promise<DatabaseFileEntity> {
+    return await this.databaseFilesService.uploadDatabaseFile(
+      fileBuffer,
+      filename,
+      user,
+    );
+  }
+
+  async getUserFiles(userId: number): Promise<DatabaseFileEntity[]> {
+    return await this.databaseFilesService.getFilesByUser(userId);
   }
 
   async getById(id: number) {
@@ -42,13 +53,5 @@ export class UsersService {
     const newUser = await this.userRepository.create(payload);
     await this.userRepository.save(newUser);
     return newUser;
-  }
-
-  getUserImages() {
-    // do stuff
-  }
-
-  saveUserImage() {
-    // do stuff
   }
 }

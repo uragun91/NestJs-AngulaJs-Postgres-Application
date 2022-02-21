@@ -18,12 +18,10 @@ export default class AuthService {
   async signup(payload: SignupPostDto) {
     const hashedPassword = await bcrypt.hash(payload.password, 10);
     try {
-      const createdUser = await this.usersService.createUser({
+      return await this.usersService.createUser({
         ...payload,
         password: hashedPassword,
       });
-      createdUser.password = undefined;
-      return createdUser;
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new HttpException(
@@ -97,9 +95,8 @@ export default class AuthService {
 
   public getCookieWithJwtToken(userId: number) {
     const payload: TokenPayload = { userId };
-    const token = this.jwtService.sign(payload);
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${this.configService.get(
-      'JWT_EXPIRATION_TIME',
-    )}`;
+    const expiration = this.configService.get('JWT_EXPIRATION_TIME');
+    const token = this.jwtService.sign(payload, { expiresIn: expiration });
+    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiration}`;
   }
 }

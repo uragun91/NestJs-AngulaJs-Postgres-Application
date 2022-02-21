@@ -1,18 +1,18 @@
 class UploadController {
-  fileList: FileList;
+  currentFileList: FileList;
   filesWithParams: { file: File; width: number; height: number }[] = [];
 
   $onInit() {}
 
   onFileChange() {
-    this.filesWithParams = Array.from(this.fileList).map((file: File) => {
+    const newFileParams = Array.from(this.currentFileList).map((file: File) => {
       return {
         file,
         width: 100,
         height: 100,
       };
     });
-    console.log(this.fileList);
+    this.filesWithParams = this.filesWithParams.concat(newFileParams);
   }
 }
 
