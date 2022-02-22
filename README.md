@@ -6,6 +6,8 @@ Install `docker` and `docker-compose` on your machine.
 
 ## Running the app
 
+In the root folder run the following command:
+
 ```bash
 docker-compose up --build --remove-orphans --force-recreate
 ```
