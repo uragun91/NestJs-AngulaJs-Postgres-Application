@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SignupPostDto } from 'src/auth/signup-post.dto';
+import { DatabaseFileWithoutData } from 'src/user-images/database-file-without-data';
 import { DatabaseFileEntity } from 'src/user-images/database-file.entyty';
 import { DatabaseFilesService } from 'src/user-images/databse-file.service';
 import { Repository } from 'typeorm';
@@ -18,16 +19,25 @@ export class UsersService {
     user: UserEntity,
     fileBuffer: Buffer,
     filename: string,
+    mimeType: string,
   ): Promise<DatabaseFileEntity> {
     return await this.databaseFilesService.uploadDatabaseFile(
       fileBuffer,
       filename,
+      mimeType,
       user,
     );
   }
 
-  async getUserFiles(userId: number): Promise<DatabaseFileEntity[]> {
-    return await this.databaseFilesService.getFilesByUser(userId);
+  async getUserFiles(userId: number): Promise<DatabaseFileWithoutData[]> {
+    return await this.databaseFilesService.getUserFilesWithoutData(userId);
+  }
+
+  async getUserFileById(
+    userId: number,
+    fileId: number,
+  ): Promise<DatabaseFileEntity> {
+    return await this.databaseFilesService.getFileById(userId, fileId);
   }
 
   async getById(id: number) {

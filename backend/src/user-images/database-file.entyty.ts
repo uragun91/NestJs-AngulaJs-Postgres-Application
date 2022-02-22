@@ -15,6 +15,9 @@ export class DatabaseFileEntity {
   @Column()
   filename: string;
 
+  @Column()
+  mimeType: string;
+
   @Column({
     type: 'bytea',
     nullable: false,

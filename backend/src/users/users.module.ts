@@ -10,9 +10,7 @@ import { UsersService } from './users.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserEntity, DatabaseFileEntity]),
-    MulterModule.register({
-      dest: './files',
-    }),
+    MulterModule.register(),
   ],
   controllers: [UsersController],
   providers: [UsersService, DatabaseFilesService],

@@ -1,31 +1,52 @@
 import {
-  BadRequestException,
   Controller,
   Get,
+  Param,
+  ParseIntPipe,
   Post,
   Req,
+  Res,
+  StreamableFile,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import JwtAuthenticationGuard from 'src/auth/jwt-authentication.guard';
-import { IUser } from './user.interface';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { editFileName, imageFileFilter } from 'src/utils/files.util';
-import { UsersService } from './users.service';
+import { Response } from 'express';
+import JwtAuthenticationGuard from 'src/auth/jwt-authentication.guard';
 import { RequestWithUser } from 'src/auth/request-with-user.interface';
-import { DatabaseFileEntity } from 'src/user-images/database-file.entyty';
+import { DatabaseFileWithoutData } from 'src/user-images/database-file-without-data';
+import { Readable } from 'stream';
+
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @Get('file/:id')
+  @UseGuards(JwtAuthenticationGuard)
+  async dowlnoadUserFileById(
+    @Req() req: RequestWithUser,
+    @Param('id', ParseIntPipe) fileId: number,
+    @Res({ passthrough: true }) response: Response,
+  ): Promise<StreamableFile> {
+    const file = await this.usersService.getUserFileById(req.user.id, fileId);
+    const stream = Readable.from(file.data);
+
+    response.set({
+      'Content-Disposition': `attachment; filename="${file.filename}"`,
+      'Content-Type': `${file.mimeType}`,
+    });
+
+    return new StreamableFile(stream);
+  }
+
   @Get('files')
   @UseGuards(JwtAuthenticationGuard)
   async getUserFiles(
     @Req() req: RequestWithUser,
-  ): Promise<DatabaseFileEntity[]> {
+  ): Promise<DatabaseFileWithoutData[]> {
     return await this.usersService.getUserFiles(req.user.id);
   }
 
@@ -36,37 +57,23 @@ export class UsersController {
       limits: {
         fileSize: 5242880,
       },
-      fileFilter: (req, file, callback) => {
-        if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
-          return callback(
-            new BadRequestException('Only image files are allowed!'),
-            false,
-          );
-        }
-        callback(null, true);
-      },
     }),
   )
   async uploadMultipleFiles(
     @Req() request: RequestWithUser,
     @UploadedFiles() files: Array<Express.Multer.File>,
-  ) {
-    files.map(async (file: Express.Multer.File) => {
-      return await this.usersService.addUserFile(
-        request.user,
-        file.buffer,
-        file.originalname,
-      );
-    });
-
-    const response = [];
-    files.forEach((file) => {
-      const fileReponse = {
-        originalname: file.originalname,
-        filename: file.filename,
-      };
-      response.push(fileReponse);
-    });
-    return response;
+  ): Promise<string[]> {
+    return Promise.all(
+      files.map(async (file: Express.Multer.File) => {
+        return await this.usersService
+          .addUserFile(
+            request.user,
+            file.buffer,
+            file.originalname,
+            file.mimetype,
+          )
+          .then((file) => `/users/file/${file.id}`);
+      }),
+    );
   }
 }

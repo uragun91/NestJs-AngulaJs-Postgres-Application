@@ -14,11 +14,21 @@ export class DatabaseFilesService {
   async uploadDatabaseFile(
     dataBuffer: Buffer,
     filename: string,
+    mimeType: string,
     user: UserEntity,
-  ) {
+  ): Promise<DatabaseFileEntity> {
+    const exisitngFile = await this.databaseFilesRepository.findOne({
+      where: { user: { id: user.id }, filename },
+    });
+
+    if (exisitngFile) {
+      return exisitngFile;
+    }
+
     const newFile = await this.databaseFilesRepository.create({
       filename,
       data: dataBuffer,
+      mimeType: mimeType,
       uploadDate: new Date(),
       user,
     });
@@ -26,10 +36,26 @@ export class DatabaseFilesService {
     return newFile;
   }
 
-  async getFilesByUser(userId: number) {
-    return await this.databaseFilesRepository.find({
+  async getFileById(
+    userId: number,
+    fileId: number,
+  ): Promise<DatabaseFileEntity> {
+    return await this.databaseFilesRepository.findOne({
       relations: ['user'],
-      where: { user: { id: userId } },
+      where: { user: { id: userId }, id: fileId },
     });
+  }
+
+  async getUserFilesWithoutData(userId: number): Promise<DatabaseFileEntity[]> {
+    return await this.databaseFilesRepository
+      .find({
+        where: { user: { id: userId } },
+      })
+      .then((files) => {
+        return files.map((file) => {
+          file.data = undefined;
+          return file;
+        });
+      });
   }
 }
