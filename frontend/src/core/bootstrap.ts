@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
-import * as angular from "angular";
-import { IMAGES_APP } from "../app";
+import * as angular from 'angular';
+import { FILES_APP } from '../app';
 
-angular.bootstrap(document, [IMAGES_APP.name], {
+angular.bootstrap(document, [FILES_APP.name], {
   strictDi: true,
 });

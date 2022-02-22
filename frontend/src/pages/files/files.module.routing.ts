@@ -2,18 +2,18 @@
 
 import { StateProvider, UrlRouterProvider } from '@uirouter/angularjs';
 
-imagesRouting.$inject = ['$urlRouterProvider', '$stateProvider'];
+filesRouting.$inject = ['$urlRouterProvider', '$stateProvider'];
 
-function imagesRouting(
+function filesRouting(
   $urlRouterProvider: UrlRouterProvider,
   $stateProvider: StateProvider,
 ) {
-  $urlRouterProvider.otherwise('/images');
+  $urlRouterProvider.otherwise('/files');
 
   $stateProvider.state({
-    name: 'images',
-    url: '/images',
-    component: 'imagesComponent',
+    name: 'files',
+    url: '/files',
+    component: 'filesComponent',
   });
   $stateProvider.state({
     name: 'upload',
@@ -22,4 +22,4 @@ function imagesRouting(
   });
 }
 
-export { imagesRouting };
+export { filesRouting };

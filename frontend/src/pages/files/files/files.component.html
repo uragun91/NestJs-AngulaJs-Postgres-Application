@@ -1,0 +1,41 @@
+<div class="row">
+  <div class="col-md-8">
+    <div class="row d-flex align-items-center mb-4 mt-2">
+      <div class="col-md-10">
+        <h1 class="m-0">Your Files</h1>
+      </div>
+      <div class="col">
+        <a ui-sref="upload" class="btn btn-primary">Upload one</a>
+      </div>
+    </div>
+
+    <div class="spinner-border" role="status" ng-if="$ctrl.isLoading">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+
+    <div ng-if="!$ctrl.files.length" class="text-muted">You have not files yet</div>
+    <div class="row">
+      <div class="col-md-8">
+        <div ng-repeat="file in $ctrl.files" class="card mb-3">
+          <div class="row g-0">
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5 class="card-title">{{ file.filename }}</h5>
+                <div class="card-text">
+                  <div class="text-muted">
+                    mime-type: <strong>{{ file.mimeType }}</strong>
+                  </div>
+                  <div class="text-muted">
+                    uploaded at: <strong>{{ file.uploadDate | date: 'short' }}</strong>
+                  </div>
+                </div>
+                <a href="{{$ctrl.API_URL + '/users/file/' + file.id}}" target="_blank"
+                  class="btn btn-primary mt-2">Download</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
