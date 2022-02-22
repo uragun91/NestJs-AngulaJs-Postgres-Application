@@ -6,6 +6,7 @@ import { PostgresErrorCode } from 'src/database/enums/postgress-error-codes.enum
 import { TokenPayload } from './token-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { ExceptionCodes } from 'src/exceptions/exception-codes.enum';
 
 @Injectable()
 export default class AuthService {
@@ -25,7 +26,7 @@ export default class AuthService {
     } catch (error) {
       if (error?.code === PostgresErrorCode.UniqueViolation) {
         throw new HttpException(
-          'User with that login already exists',
+          ExceptionCodes.USER_EXISTS,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -45,7 +46,7 @@ export default class AuthService {
       );
       if (!isPasswordMatching) {
         throw new HttpException(
-          'Wrong credentials provided',
+          ExceptionCodes.WRONG_CREDENTIALS,
           HttpStatus.BAD_REQUEST,
         );
       }
@@ -53,7 +54,7 @@ export default class AuthService {
       return user;
     } catch (error) {
       throw new HttpException(
-        'Wrong credentials provided',
+        ExceptionCodes.WRONG_CREDENTIALS,
         HttpStatus.BAD_REQUEST,
       );
     }
@@ -67,14 +68,14 @@ export default class AuthService {
       return user;
     } catch (error) {
       throw new HttpException(
-        'Wrong credentials provided',
+        ExceptionCodes.WRONG_CREDENTIALS,
         HttpStatus.BAD_REQUEST,
       );
     }
   }
 
   public getCookieForLogOut() {
-    return `Authentication=; HttpOnly; Path=/; Max-Age=0`;
+    return `Authentication=; Path=/; Max-Age=0`;
   }
 
   private async verifyPassword(
@@ -97,6 +98,6 @@ export default class AuthService {
     const payload: TokenPayload = { userId };
     const expiration = this.configService.get('JWT_EXPIRATION_TIME');
     const token = this.jwtService.sign(payload, { expiresIn: expiration });
-    return `Authentication=${token}; HttpOnly; Path=/; Max-Age=${expiration}`;
+    return `Authentication=${token}; Path=/; Max-Age=84600`;
   }
 }

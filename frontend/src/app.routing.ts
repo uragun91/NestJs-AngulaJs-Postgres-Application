@@ -1,5 +1,3 @@
-'use strict';
-
 import { UrlRouterProvider } from '@uirouter/angularjs';
 
 appRouting.$inject = ['$urlRouterProvider', '$stateProvider'];

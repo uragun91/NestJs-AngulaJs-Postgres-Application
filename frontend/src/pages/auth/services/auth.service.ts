@@ -1,20 +1,31 @@
-import { IHttpPromise } from "angular";
+import { IHttpPromise } from 'angular';
+import { IUser } from '../../../models/user.interface';
 
-class AuthService {
-  API_URL = "https://api.github.com";
+export class AuthService {
+  API_URL = 'http://localhost:8081';
+  user: IUser | null = null;
 
   constructor(private $http: ng.IHttpService) {}
 
-  logIn(): IHttpPromise<string> {
-    const REPOS = "users/var-bin/repos";
-    const URL = `${this.API_URL}/${REPOS}`;
-
-    return this.$http.get<string>(URL);
+  logIn(email: string, password: string): IHttpPromise<IUser> {
+    const url = `${this.API_URL}/auth/login`;
+    return this.$http
+      .post(url, {
+        email,
+        password,
+      })
+      .then((result) => result.data);
   }
 
-  signUp(): IHttpPromise<string> {
-    return this.$http.get('/')
+  signUp(email: string, password: string): IHttpPromise<string> {
+    const url = `${this.API_URL}/auth/signup`;
+    return this.$http
+      .post(url, {
+        email,
+        password,
+      })
+      .then((result) => result.data);
   }
 }
 
-AuthService.$inject = ["$http"];
+AuthService.$inject = ['$http'];

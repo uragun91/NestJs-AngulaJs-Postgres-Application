@@ -11,10 +11,12 @@
   "dependencies": {
     "@uirouter/angularjs": "^1.0.11",
     "angular": "^1.6.6",
+    "angular-cookies": "^1.8.2",
     "body-parser": "^1.18.2"
   },
   "devDependencies": {
     "@types/angular": "^1.6.6",
+    "@types/angular-cookies": "^1.8.1",
     "@types/clean-webpack-plugin": "^0.1.3",
     "@types/html-webpack-plugin": "^3.2.6",
     "@types/node": "^17.0.18",

@@ -1,11 +1,14 @@
 <form name="signUpForm" class="sign-up card w-100">
   <div class="card-header d-flex align-items-center">
-    Please signup or
+    <span>
+      <span ng-if="!$ctrl.isSignedUp">Please signup or</span>
+      <span ng-if="$ctrl.isSignedUp">Congrats! You have been successfully signed up! Please</span>
+    </span>
     <button class="btn btn-link p-0 ms-1" ng-click="$ctrl.onLoginClick()">log in</button>
   </div>
-  <div class="card-body">
+  <div class="card-body" ng-if="!$ctrl.isSignedUp">
     <div class="mb-3">
-      <label class="form-label">Login</label>
+      <label class="form-label">Email</label>
       <input type="text" class="form-control" ng-model="$ctrl.values.login">
     </div>
     <div class="mb-3">
@@ -16,6 +19,9 @@
       <label class="form-label">Confirm Password</label>
       <input type="password" class="form-control" ng-model="$ctrl.values.confirmPassword">
     </div>
-    <button type="submit" ng-disabled="!$ctrl.isValid" class="btn btn-primary">Submit</button>
+    <div class="text-danger mb-4" ng-class="$ctrl.isUserExistsError ? 'visible' : 'invisible'">User with given email
+      already exists</div>
+    <button type="submit" ng-disabled="!$ctrl.isValid || $ctrl.isLoading" class="btn btn-primary"
+      ng-click="$ctrl.handleSubmit()">Submit</button>
   </div>
 </form>

@@ -15,7 +15,7 @@ const devServer: DevServerConfiguration = {
     },
   },
   host: 'localhost',
-  port: 5000,
+  port: 5001,
 };
 
 const webpackConfig = (env: any): Configuration => {
