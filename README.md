@@ -1,4 +1,4 @@
-# AngularJS and NestJS Images uploading application
+# AngularJS and NestJS TXT files uploading application
 
 ## Prerequisits
 
