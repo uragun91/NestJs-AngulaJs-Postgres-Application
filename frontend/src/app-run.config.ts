@@ -33,7 +33,6 @@ function appRunConfig(
     const publicPages = ['/auth'];
     const isRestrictedPage = publicPages.indexOf($location.path()) === -1;
     const isAuthenticated = Boolean($cookies.get('Authentication'));
-    console.log($cookies.getAll());
 
     if (isRestrictedPage && !isAuthenticated) {
       $location.path('/auth');

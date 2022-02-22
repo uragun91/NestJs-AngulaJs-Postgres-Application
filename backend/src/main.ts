@@ -9,7 +9,7 @@ async function bootstrap() {
   const httpAdapterHost = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapterHost));
   app.enableCors({
-    origin: 'http://localhost:5001',
+    origin: true,
     credentials: true,
   });
 
