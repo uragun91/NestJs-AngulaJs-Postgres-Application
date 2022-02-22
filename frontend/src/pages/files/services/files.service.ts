@@ -19,7 +19,19 @@ export class FilesService {
   }
 
   postImages(files: File[]): IPromise<string[]> {
-    return;
+    const url = `${this.API_URL}/users/files`;
+    const formData = new FormData();
+    for (var i in files) {
+      formData.append('files', files[i]);
+    }
+    const headers: Record<string, any> = { 'Content-Type': undefined };
+    var config = { headers };
+
+    return this.$http
+      .post<string[]>(url, formData, config)
+      .then((result) =>
+        result.data.map((fileUrl) => `${this.API_URL}${fileUrl}`),
+      );
   }
 }
 

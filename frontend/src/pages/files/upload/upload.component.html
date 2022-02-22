@@ -1,8 +1,38 @@
-<div>Upload Component</div>
+<div class="row">
+  <div class="col-md-8">
 
-<input type="file" files-input ng-model="$ctrl.currentFileList" ng-change="$ctrl.onFileChange()" multiple />
+    <div class="d-flex align-items-center justify-content-between">
+      <h1>Uploading page</h1>
+      <a ui-sref="files" class="btn btn-primary">View all files</a>
+    </div>
+
+    <div class="my-3 form-group">
+      <label class="form-label">You can select up to 20 txt files.</label>
+      <input type="file" accept=".txt" class="form-control" files-input ng-model="$ctrl.currentFileList"
+        ng-change="$ctrl.onFileChange()" multiple />
+      <div class="form-text">
+        Files more than 5 mb will not be accepted by the server
+      </div>
+    </div>
+
+    <button class="btn btn-primary mb-4" ng-disabled="!$ctrl.files.length || $ctrl.isUploading"
+      ng-click="$ctrl.uploadFiles()">Upload
+      all</button>
+
+    <div class="row" ng-if="$ctrl.filesUploaded">
+      <div class="col-12">
+        <div>Files has been uploaded!</div>
+      </div>
+      <div class="col-12" ng-repeat="fileLink in $ctrl.links track by $index">
+        <a ng-href="{{fileLink}}" target="_blank">{{fileLink}}</a>
+      </div>
+    </div>
+
+    <div class="row" ng-repeat="fileContent in $ctrl.filesContents track by $index">
+      <label class="col-12">{{$ctrl.files[$index].name}}</label>
+      <pre class="col-md-8 border rounded" style="white-space: pre-line;">{{ fileContent }}</pre>
+    </div>
 
 
-<div ng-if="$ctrl.filesWithParams.length">
-  <div ng-repeat="fileParams in $ctrl.filesWithParams" ng-thumb="fileParams"></div>
+  </div>
 </div>

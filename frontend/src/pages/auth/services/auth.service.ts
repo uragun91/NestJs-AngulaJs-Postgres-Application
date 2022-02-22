@@ -1,4 +1,5 @@
-import { IHttpPromise } from 'angular';
+import { IPromise } from 'angular';
+
 import { IUser } from '../../../models/user.interface';
 
 export class AuthService {
@@ -7,24 +8,32 @@ export class AuthService {
 
   constructor(private $http: ng.IHttpService) {}
 
-  logIn(email: string, password: string): IHttpPromise<IUser> {
+  logIn(email: string, password: string): IPromise<IUser> {
     const url = `${this.API_URL}/auth/login`;
     return this.$http
-      .post(url, {
+      .post<IUser>(url, {
         email,
         password,
       })
       .then((result) => result.data);
   }
 
-  signUp(email: string, password: string): IHttpPromise<string> {
+  signUp(email: string, password: string): IPromise<void> {
     const url = `${this.API_URL}/auth/signup`;
     return this.$http
-      .post(url, {
+      .post<void>(url, {
         email,
         password,
       })
       .then((result) => result.data);
+  }
+
+  logout(): IPromise<void> {
+    const url = `${this.API_URL}/auth/log-out`;
+    return this.$http
+      .post<void>(url, null)
+      .then((result) => result.data)
+      .then(() => (this.user = null));
   }
 }
 

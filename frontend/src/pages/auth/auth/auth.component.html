@@ -1,3 +1,5 @@
 <div>{{ $ctrl.title }}</div>
-<login ng-show="$ctrl.mode === 'login'" on-signup-click="$ctrl.onSignUpClick()"></login>
-<sign-up ng-show="$ctrl.mode === 'signup'" on-login-click="$ctrl.onLoginClick()"></sign-up>
+<div class="mt-5">
+  <login ng-show="$ctrl.mode === 'login'" on-signup-click="$ctrl.onSignUpClick()"></login>
+  <sign-up ng-show="$ctrl.mode === 'signup'" on-login-click="$ctrl.onLoginClick()"></sign-up>
+</div>

@@ -8,6 +8,8 @@ import { AUTH_MODULE } from './pages/auth/auth.module';
 import { appRunConfig } from './app-run.config';
 import { FILES_MODULE } from './pages/files/files.module';
 
+import '../styles.css';
+
 const FILES_APP = angular
   .module('filesApp', [
     'ngCookies',

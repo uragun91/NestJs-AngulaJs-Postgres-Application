@@ -1,20 +1,40 @@
+import { FilesService } from '../services/files.service';
+
 class UploadController {
   currentFileList: FileList;
-  filesWithParams: { file: File; width: number; height: number }[] = [];
+  files: File[] = [];
+  filesContents: string[] = [];
+  filesUploaded: boolean = false;
+  links: string[];
+  isUploading: boolean = false;
+
+  constructor(private $scope: ng.IScope, private FilesService: FilesService) {}
 
   $onInit() {}
 
-  onFileChange() {
-    const newFileParams = Array.from(this.currentFileList).map((file: File) => {
-      return {
-        file,
-        width: 100,
-        height: 100,
-      };
+  onFileChange(): void {
+    this.files = this.files.concat(Array.from(this.currentFileList));
+
+    Promise.all(this.files.map((file) => file.text())).then((result) => {
+      this.filesContents = result;
+      this.$scope.$digest();
     });
-    this.filesWithParams = this.filesWithParams.concat(newFileParams);
+  }
+
+  uploadFiles(): void {
+    this.isUploading = true;
+    this.FilesService.postImages(this.files).then((links) => {
+      this.files = [];
+      this.filesContents = [];
+      this.currentFileList = null;
+
+      this.links = links;
+      this.filesUploaded = true;
+    });
   }
 }
+
+UploadController.$inject = ['$scope', 'FilesService'];
 
 export const uploadComponent = {
   template: require('./upload.component.html'),
